@@ -2,69 +2,135 @@
 # In this exercise, you are tasked to write a Python program that simulates operations on a company's account and a warehouse. 
 # The program should handle various commands for performing operations like:
 # adding/subtracting balance, recording sales and purchases, displaying account balance, showing warehouse status, and reviewing recorded operations.
-option = None
-balance = 0
+v_option = None
+v_balance = 0
+v_sale = 0
+v_purchase = []
+v_account = 0
+v_list = 0
+v_warehouse = 0
+v_review = 0
+l_name = []
 
 def goto(linenum):
     global line
     line = linenum
-
-def balance_1(): # The program will prompt for an amount to add or subtract from the account.
-    global balance
+    
+# 'balance': The program will prompt for an amount to add or subtract from the account.
+def f_balance(): 
+    global v_balance
     try:
-        action = int(input("Press '1' to Add or press '2' to Subtract: "))
-        print(action == 1)
-        if action == 1:
-            value = float(input("1 - Insert the value to add to your balance: "))
-            balance += value
-            print("Your new balance is: {}".format(balance))
-        elif action == 2:
-            value = float(input("2 - Insert the value to subtract from your balance:"))
-            if value < balance:
-                balance -= value
-                print("Your new balance is: {}".format(balance))
-            else:
-                print("Sorry, you do not have balance enough to do this withdraw.")
+        v_action = int(input("Press '1' to Add or press '2' to Subtract: "))
+        if v_action != 1 and v_action != 2:
+            print("Sorry {} is not a valid option.\n".format(v_action))
+        else:
+            v_value = float(input("Insert the amount to your balance: "))
+            if v_action == 1:
+                v_balance += v_value
+                print("Your new balance is: {}".format(v_balance))
+            elif v_action == 2:
+                if v_value <= v_balance:
+                    v_balance -= v_value
+                    print("Your new balance is: {}".format(v_balance))
+                else:
+                    print("Sorry, you do not have balance enough to do this withdraw.\nYour actual balance is {}.".format(v_balance))
     except ValueError:
-        print("Sorry.\n")
+        print("Sorry {} is not a valid value.\n".format(v_value))
+
+
+# 'sale': The program should prompt for the name of the product, its price, and quantity. Perform necessary calculations and update the account and warehouse accordingly.        
+def f_sale():
+    global v_sale
+
+    
+# 'purchase': The program should prompt for the name of the product, its price, and quantity. Perform necessary calculations and update the account and warehouse accordingly. 
+#             Ensure that the account balance is not negative after a purchase operation.    
+def f_purchase():
+    global v_purchase
+    global l_name
+    global v_balance
+    try:
+        v_name = str(input("Insert the name of product: "))
+        v_price = float(input("Insert the unit price of {}: ".format(v_name)))
+        v_quantity = int(input("Insert the quantity of {}: ".format(v_name)))
+        
+        total_price = v_price * v_quantity
+        if total_price > v_balance:
+            print("Sorry, you do not have balance enough to do this purchase.\nYour actual balance is {}.".format(v_balance))
+        else:       
+            for purchase in v_purchase:
+                if purchase["v_name"] == v_name:
+                    purchase["v_price"] = v_price
+                    purchase["v_quantity"] += v_quantity
+                    break     
+            else:
+                v_purchase.append({"v_name": v_name, "v_price": v_price, "v_quantity": v_quantity})
+            v_balance -= total_price
+            print("Your new balance is: {}".format(v_balance))
+            
+        print(*v_purchase, sep = "\n")
+        print(id(v_name))
+    except ValueError:
+        print("Sorry, you did not input a valid value.\n")
+
+# 'account': Display the current account balance.
+def f_account():
+    global v_account
+
+
+# 'list': Display the total inventory in the warehouse along with product prices and quantities.
+def f_list():
+    global v_list
     
 
-while option != 0:
-    option = int(input("\n\nSelect one of the following options:\n1 - balance\n2 - sale\n3 - purchase\n4 - account\n5 - list\n6 - warehouse\n7 - review\n0 - end\n\n"))
+# 'warehouse': Prompt for a product name and display its status in the warehouse.
+def f_warehouse():
+    global v_list
+
+
+# 'review': Prompt for two indices 'from' and 'to', and display all recorded operations within that range. 
+#           If ‘from’ and ‘to’ are empty, display all recorder operations. 
+#           Handle cases where 'from' and 'to' values are out of range.
+def f_review():
+    global v_review
+    
+
+
+while v_option != 0:
+    v_option = int(input("\n\nSelect one of the following options:\n1 - balance\n2 - sale\n3 - purchase\n4 - account\n5 - list\n6 - warehouse\n7 - review\n0 - end\n\n"))
 
     try:
-        if option == 0:
+        if v_option == 0:
             print("\nThank you for using our system.\n\n")
             exit()
             
-        elif option == 1: # Option to balance
-            print("You choose the Option {} to check the Balance.".format(option))
-            balance_1()
+        elif v_option == 1: # option to balance
+            print("You choose the v_option {} to check the Balance.".format(v_option))
+            f_balance()
             
+        elif v_option == 2: # option to sale
+            print("You choose the option {} to check the sale.".format(v_option))
+            f_sale()
             
-        elif option == 2: # Option to sale
-            print("You choose the Option {} to check the sale.".format(option))
-            
-            
-        elif option == 3: # Option to purchase
-            print("You choose the Option {} to check the purchase.".format(option))
-             
+        elif v_option == 3: # option to purchase
+            print("You choose the option {} to check the purchase.".format(v_option))
+            f_purchase() 
                  
-        elif option == 4: # Option to account
-            print("You choose the Option {} to check the account.".format(option))
+        elif v_option == 4: # option to account
+            print("You choose the option {} to check the account.".format(v_option))
+            f_account()
             
+        elif v_option == 5: # option to list
+            print("You choose the option {} to check the list.".format(v_option))
+            f_list()
             
-        elif option == 5: # Option to list
-            print("You choose the Option {} to check the list.".format(option))
+        elif v_option == 6: # option to warehouse
+            print("You choose the option {} to check the warehouse.".format(v_option))
+            f_warehouse()
             
-            
-        elif option == 6: # Option to warehouse
-            print("You choose the Option {} to check the warehouse.".format(option))
-            
-            
-        elif option == 7: # Option to review
-            print("You choose the Option {} to check the review.".format(option))
-             
+        elif v_option == 7: # option to review
+            print("You choose the ption {} to check the review.".format(v_option))
+            f_review() 
                 
     except ValueError:
         print("Sorry, but you have input a wrong option, please let's try again with an valid option number.\n")
