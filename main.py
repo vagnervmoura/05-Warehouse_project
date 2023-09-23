@@ -10,7 +10,7 @@ v_account = 0
 v_list = None
 v_quantity = 0
 v_warehouse = []
-v_review = 0
+v_review = []
 
 def goto(linenum):
     global line
@@ -19,6 +19,7 @@ def goto(linenum):
 # 'balance': The program will prompt for an amount to add or subtract from the account.
 def f_balance(): 
     global v_balance
+    global v_review
     try:
         v_action = int(input("Press '1' to Add or press '2' to Subtract: "))
         if v_action != 1 and v_action != 2:
@@ -28,12 +29,16 @@ def f_balance():
             if v_action == 1:
                 v_balance += v_value
                 print("Your new balance is: {}".format(v_balance))
+                v_review.append("Balance changed, added: {}".format(v_value))
             elif v_action == 2:
                 if v_value <= v_balance:
                     v_balance -= v_value
                     print("Your new balance is: {}".format(v_balance))
+                    v_review.append("Balance changed, subtracted: {}".format(v_value))
                 else:
                     print("Sorry, you do not have balance enough to do this withdraw.\nYour actual balance is {}.".format(v_balance))
+        
+            
     except ValueError:
         print("Sorry {} is not a valid value.\n".format(v_value))
 
@@ -44,6 +49,7 @@ def f_sale():
     global v_balance
     global v_quantity
     global v_warehouse
+    global v_review
     try:
         v_name = str(input("Insert the name of product to sell: "))
         for sale in v_warehouse:
@@ -55,6 +61,7 @@ def f_sale():
                         sale["v_quantity"] -= v_sale
                         v_balance += sale["v_price"] * v_sale
                         print("Your new balance is: {}\nYour new quantity of {} is {}\n".format(v_balance, v_name, sale["v_quantity"]))
+                        v_review.append("Sale made, sold: {} of {} by a total of: {}".format(v_sale, v_name, sale["v_price"] * v_sale))
                     
                     else:
                         print("Sorry, you do not have enough {} to sell.\n".format(v_name)) 
@@ -75,6 +82,7 @@ def f_purchase():
     global v_purchase
     global v_balance
     global v_warehouse
+    global v_review
     try:
         v_name = str(input("Insert the name of product: "))
         v_price = float(input("Insert the unit price of {}: ".format(v_name)))
@@ -88,9 +96,11 @@ def f_purchase():
                 if purchase["v_name"] == v_name:
                     purchase["v_price"] = v_price
                     purchase["v_quantity"] += v_quantity
+                    v_review.append("Purchase made, added: {} of {} by a total of: {}".format(v_quantity, v_name, total_price))
                     break     
             else:
                 v_purchase.append({"v_name": v_name, "v_price": v_price, "v_quantity": v_quantity})
+                v_review.append("Purchase made, added: {} of {} by a total of: {}".format(v_quantity, v_name, total_price))
             v_balance -= total_price
             print("Your new balance is: {}".format(v_balance))
             
@@ -138,7 +148,10 @@ def f_warehouse():
 #           Handle cases where 'from' and 'to' values are out of range.
 def f_review():
     global v_review
-    
+    if v_review == []:
+        print("The review is empty.\n")
+    else:
+        print(*v_review, sep = "\n")
 
 
 while v_option != 0:
