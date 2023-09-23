@@ -7,9 +7,9 @@ v_balance = 0
 v_sale = 0
 v_purchase = []
 v_account = 0
-v_list = 0
+v_list = None
 v_quantity = 0
-v_warehouse = 0
+v_warehouse = []
 v_review = 0
 
 def goto(linenum):
@@ -103,17 +103,35 @@ def f_purchase():
 # 'account': Display the current account balance.
 def f_account():
     global v_account
-    print("Your actual balance is: {}".format(v_balance))
+    if v_account == []:
+        print("The account is empty.\n")
+    else:
+        print("Your actual balance is: {}".format(v_balance))
 
 # 'list': Display the total inventory in the warehouse along with product prices and quantities.
 def f_list():
     global v_list
-    
+    global v_warehouse
+    if v_warehouse == []:
+        print("The warehouse is empty.\n")
+    else:
+        print(*v_warehouse, sep = "\n")  
 
 # 'warehouse': Prompt for a product name and display its status in the warehouse.
 def f_warehouse():
-    global v_list
+    global v_warehouse
+    if v_warehouse == []:
+        print("The warehouse is empty.\n")
+    try:
+        v_name = str(input("Insert the name of product to check in Warehouse: "))
+        for warehouse in v_warehouse:
+            if warehouse["v_name"] == v_name:
+                print("The {} is Available in Warehouse.\nHave {} itens in Warehouse.\nAnd its price is {}\n".format(v_name, warehouse["v_quantity"], warehouse["v_price"]))            
+            elif warehouse["v_name"] not in v_name:
+                print("Sorry, we do not have {} in our warehouse.\n".format(v_name))
 
+    except ValueError:
+        print("Sorry, you did not input a valid value.\n")  
 
 # 'review': Prompt for two indices 'from' and 'to', and display all recorded operations within that range. 
 #           If ‘from’ and ‘to’ are empty, display all recorder operations. 
