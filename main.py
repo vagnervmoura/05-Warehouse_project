@@ -8,9 +8,9 @@ v_sale = 0
 v_purchase = []
 v_account = 0
 v_list = 0
+v_quantity = 0
 v_warehouse = 0
 v_review = 0
-l_name = []
 
 def goto(linenum):
     global line
@@ -41,14 +41,40 @@ def f_balance():
 # 'sale': The program should prompt for the name of the product, its price, and quantity. Perform necessary calculations and update the account and warehouse accordingly.        
 def f_sale():
     global v_sale
+    global v_balance
+    global v_quantity
+    global v_warehouse
+    try:
+        v_name = str(input("Insert the name of product to sell: "))
+        for sale in v_warehouse:
+            if sale["v_name"] == v_name:
+                print("The price of {} is {}\nWe have {} in our warehouse.\n".format(v_name, sale["v_price"], sale["v_quantity"]))
+                try:
+                    v_sale = int(input("Insert the quantity of {} to sell: ".format(v_name)))
+                    if sale["v_quantity"] >= v_sale:
+                        sale["v_quantity"] -= v_sale
+                        v_balance += sale["v_price"] * v_sale
+                        print("Your new balance is: {}\nYour new quantity of {} is {}\n".format(v_balance, v_name, sale["v_quantity"]))
+                    
+                    else:
+                        print("Sorry, you do not have enough {} to sell.\n".format(v_name)) 
+                
+                except ValueError:
+                    print("Sorry, you did not input a valid value.\n") 
+                
+            else:
+                print("Sorry, we do not have {} in our warehouse.\n".format(v_name))
+
+    except ValueError:
+        print("Sorry, you did not input a valid value.\n")        
 
     
 # 'purchase': The program should prompt for the name of the product, its price, and quantity. Perform necessary calculations and update the account and warehouse accordingly. 
 #             Ensure that the account balance is not negative after a purchase operation.    
 def f_purchase():
     global v_purchase
-    global l_name
     global v_balance
+    global v_warehouse
     try:
         v_name = str(input("Insert the name of product: "))
         v_price = float(input("Insert the unit price of {}: ".format(v_name)))
@@ -69,6 +95,7 @@ def f_purchase():
             print("Your new balance is: {}".format(v_balance))
             
         print(*v_purchase, sep = "\n")
+        v_warehouse = v_purchase
         print(id(v_name))
     except ValueError:
         print("Sorry, you did not input a valid value.\n")
