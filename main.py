@@ -103,7 +103,7 @@ def f_purchase():
 # 'account': Display the current account balance.
 def f_account():
     global v_account
-
+    print("Your actual balance is: {}".format(v_balance))
 
 # 'list': Display the total inventory in the warehouse along with product prices and quantities.
 def f_list():
